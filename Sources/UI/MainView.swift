@@ -43,7 +43,7 @@ struct MainView: View {
     @Environment(Router.self) private var router
     @Environment(Config.self) private var config
     @Environment(\.palette) private var palette
-    @Environment(\.closeApp) private var closeApp
+    @Environment(\.finishApp) private var finishApp
     @Environment(\.scenePhase) private var phase
 
     @State private var selectedId: Int64 = 0
@@ -63,6 +63,12 @@ struct MainView: View {
     private var isChecklist: Bool { current?.type == .checklist }
 
     var body: some View {
+        mainContent
+            // The launcher's navigation bar Back on the main screen (onBackPressedCompat).
+            .onBackPressed { tryClose() }
+    }
+
+    private var mainContent: some View {
         VStack(spacing: 0) {
             if isChecklist && !session.selected.isEmpty {
                 selectionBar
@@ -212,9 +218,6 @@ struct MainView: View {
 
     private var topBar: some View {
         HStack(spacing: 0) {
-            if closeApp != nil {
-                IconButton(icon: "square.grid.2x2", action: tryClose)
-            }
             Spacer()
             if showSaveButton { IconButton(icon: "square.and.arrow.down") { menu { saveNote() } } }
             if !isChecklist { IconButton(icon: "magnifyingglass") { menu { unlocked { openSearch() } } } }
@@ -547,7 +550,7 @@ struct MainView: View {
 
     private func leave() {
         AppLock.shared.lock()
-        closeApp?()
+        finishApp?()
     }
 
     /// Waits for a dismissing sheet / picker / alert before presenting the next one.
