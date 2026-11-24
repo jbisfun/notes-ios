@@ -75,6 +75,10 @@ struct MainView: View {
         .background(palette.backgroundColor.ignoresSafeArea())
         .onAppear(perform: start)
         .onChange(of: selectedId) { old, new in pageChanged(from: old, to: new) }
+        // A widget click (OPEN_NOTE_ID) sets the current note while the app is already open.
+        .onChange(of: config.currentNoteId) { _, id in
+            if id != selectedId && store.note(id) != nil { select(id) }
+        }
         .onChange(of: phase) { _, p in
             if p != .active && config.autosaveNotes { store.saveText(selectedId, force: false) }
             if p == .active { store.runAutoBackupIfDue() }

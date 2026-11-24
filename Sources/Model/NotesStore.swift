@@ -6,6 +6,9 @@ import Observation
 @MainActor
 @Observable
 final class NotesStore {
+    /// One store per process, shared by the app and its home-screen widget (launcher-ios).
+    static let shared = NotesStore()
+
     private(set) var notes: [Note] = []
     var toast: String?
 

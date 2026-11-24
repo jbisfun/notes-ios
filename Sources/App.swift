@@ -22,7 +22,7 @@ final class Router {
 /// The whole app as one view: the standalone app's window content, and what
 /// the launcher presents. `openURL` is a text file handed over by the launcher.
 public struct NotesRoot: View {
-    @State private var store = NotesStore()
+    @State private var store = NotesStore.shared
     @State private var router = Router()
     private let openURL: URL?
 
